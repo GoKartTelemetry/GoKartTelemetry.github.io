@@ -18,7 +18,7 @@
     .btn:active { transform: scale(0.97); }
     .btn-store { background: #007aff; color: #fff; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
 
-    /* Кастомный баннер для сторонних браузеров (Chrome, Telegram и др.) */
+    /* Кастомный баннер для сторонних браузеров */
     #custom-banner { 
       position: fixed; bottom: 20px; left: 16px; right: 16px; 
       background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); 
@@ -33,12 +33,10 @@
 </head>
 <body>
 
-  <!-- Иконка и кнопка на странице по центру-->
   <img src="https://is1-ssl.mzstatic.com" alt="Go-Kart Telemetry Logo" class="app-icon">
   <a href="https://apps.apple.com/app/id6756797114" class="btn btn-store">App Store</a>
 
   <div id="custom-banner">
-    <!-- Иконка и кнопка для кастомного баннера снизу-->
     <img src="https://is1-ssl.mzstatic.com" alt="Go-Kart Telemetry Icon">
     <div class="banner-text">Go-Kart Telemetry</div>
     <a href="https://apps.apple.com/app/id6756797114" class="banner-btn">VIEW</a>
@@ -48,8 +46,7 @@
     (function() {
       var ua = navigator.userAgent;
       var isApple = /iPhone|iPad|iPod|Macintosh/.test(ua);
-      // Определяем Safari (чтобы не показывать кастомный баннер там, где сработает нативный)
-      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Telegram/.test(ua);
+      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Telegram|YaBrowser/.test(ua);
 
       if (isApple && !isSafari) {
         document.getElementById('custom-banner').style.display = 'flex';
