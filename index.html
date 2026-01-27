@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GoKartTelemetry</title>
+
+  <!-- Smart App Banner для Safari на iOS -->
+  <meta name="apple-itunes-app" content="app-id=6756797114, app-argument=https://GoKartTelemetry.github.io/">
+
+  <style>
+    /* Стили кастомного баннера */
+    #gkt-app-banner{position:fixed;left:8px;right:8px;bottom:16px;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;padding:10px 12px;gap:10px;z-index:99999;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+    #gkt-app-banner img{width:48px;height:48px;border-radius:10px;flex:0 0 48px}
+    #gkt-app-banner .gkt-info{flex:1}
+    #gkt-app-banner .gkt-title{font-weight:600;margin-bottom:4px}
+    #gkt-app-banner .gkt-sub{color:#666;font-size:13px}
+    #gkt-app-banner .gkt-actions{display:flex;align-items:center;gap:8px}
+    #gkt-app-banner .gkt-actions a{display:inline-block;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600}
+    #gkt-open{background:#007aff;color:#fff}
+    #gkt-install{background:#34c759;color:#fff}
+    #gkt-close{margin-left:4px;background:transparent;border:0;color:#999;font-size:18px;cursor:pointer}
+    @media (min-width:800px){#gkt-app-banner{left:50%;transform:translateX(-50%);max-width:640px}}
+  </style>
+</head>
+<body>
+  <h1>GoKartTelemetry</h1>
+  <p>Добро пожаловать на сайт проекта. Если у вас установлено iOS‑приложение — ссылки откроются в нём. Если нет — будет предложено скачать приложение.</p>
+
+  <!-- Кастомный баннер (показывается в браузерах, отличных от Safari на iOS, и как fallback) -->
+  <div id="gkt-app-banner" style="display:none" role="dialog" aria-label="GoKartTelemetry">
+    <img src="https://via.placeholder.com/48x48.png?text=GKT" alt="GoKartTelemetry">
+    <div class="gkt-info">
+      <div class="gkt-title">GoKartTelemetry</div>
+      <div class="gkt-sub">Просматривайте телеметрию гонок и управляйте данными — приложение для iPhone</div>
+    </div>
+    <div class="gkt-actions">
+      <a id="gkt-open" href="#" role="button">Открыть</a>
+      <a id="gkt-install" href="https://apps.apple.com/app/id6756797114" target="_blank" rel="noopener" role="button">Скачать</a>
+      <button id="gkt-close" aria-label="Закрыть">✕</button>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var appStoreURL = 'https://apps.apple.com/app/id6756797114';
+      var universalLink = 'https://GoKartTelemetry.github.io/';
+      try {
+        var dismissed = localStorage.getItem('gktBannerDismissed');
+        if (dismissed) return;
+      } catch(e){ /* localStorage может быть недоступен — игнорируем */ }
+
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPhone|iPad|iPod/.test(ua) && !window.MSStream;
+      // простая детекция Safari на iOS (не Chrome/Firebase/Firefox)
+      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome/.test(ua);
+
+      // Если Safari на iOS — используем нативный Smart App Banner, не показываем кастомный
+      if (isIOS && isSafari) return;
+
+      // Показ баннер�� как fallback для других браузеров и платформ
+      function showBanner(){
+        var banner = document.getElementById('gkt-app-banner');
+        if (!banner) return;
+        banner.style.display = 'flex';
+
+        document.getElementById('gkt-close').addEventListener('click', function(){
+          banner.style.display = 'none';
+          try { localStorage.setItem('gktBannerDismissed','1'); } catch(e){}
+        });
+
+        document.getElementById('gkt-install').addEventListener('click', function(){
+          // Открыть App Store; целевая ссылка уже задана в href
+        });
+
+        document.getElementById('gkt-open').addEventListener('click', function(e){
+          e.preventDefault();
+          // Попытаться открыть Universal Link — если приложение установлено, откроется, иначе — загрузится страница
+          window.location.href = universalLink;
+        });
+      }
+
+      // Показываем баннер небольшим задержанием, чтобы избежать резкого всплытия
+      setTimeout(showBanner, 600);
+    })();
+  </script>
+</body>
+</html>
