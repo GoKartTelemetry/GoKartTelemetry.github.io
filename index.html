@@ -1,80 +1,66 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>GoKartTelemetry</title>
-
-  <!-- Smart App Banner для Safari на iOS -->
+  <title>Go-Kart Telemetry</title>
   <meta name="apple-itunes-app" content="app-id=6756797114, app-argument=https://gokarttelemetry.github.io">
 
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 60px 20px; color: #1d1d1f; background: #f5f5f7; }
-    .app-icon { width: 120px; height: 120px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 24px; }
-    h1 { font-size: 24px; margin-bottom: 8px; }
-    #status-text { color: #86868b; font-size: 16px; margin-bottom: 20px; }
-    .loader { border: 3px solid #d2d2d7; border-top: 3px solid #007aff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    /* Кастомный баннер снизу */
-    #gkt-app-banner { position:fixed; left:16px; right:16px; bottom:20px; background:rgba(255,255,255,0.9); backdrop-filter: blur(10px); border: 0.5px solid #d2d2d7; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,0.1); display:none; align-items:center; padding:12px; gap:12px; z-index:99999; text-align: left; }
-    #gkt-app-banner img { width:44px; height:44px; border-radius:10px; }
-    .gkt-info { flex:1; }
-    .gkt-title { font-weight:600; font-size:14px; }
-    .gkt-sub { color:#6e6e73; font-size:11px; }
-    .gkt-actions a { background:#007aff; color:#fff; padding:6px 14px; border-radius:16px; text-decoration:none; font-weight:600; font-size:13px; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      height: 100vh; margin: 0; background: #f5f5f7; 
+    }
+    .app-icon { width: 120px; height: 120px; border-radius: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 40px; }
+    .btn { width: 220px; padding: 14px 0; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 16px; margin-bottom: 12px; text-align: center; transition: transform 0.1s; }
+    .btn:active { transform: scale(0.97); }
+    .btn-open { background: #007aff; color: #fff; display: none; }
+    .btn-store { background: #fff; color: #007aff; border: 1px solid #007aff; }
+
+    /* Кастомный баннер для Chrome/Telegram */
+    #custom-banner { 
+      position: fixed; bottom: 20px; left: 16px; right: 16px; 
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); 
+      border-radius: 14px; padding: 12px; display: none; 
+      align-items: center; gap: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+      border: 0.5px solid #d2d2d7; z-index: 1000;
+    }
+    #custom-banner img { width: 40px; height: 40px; border-radius: 8px; }
+    .banner-text { flex: 1; font-size: 13px; font-weight: 600; }
+    .banner-btn { background: #007aff; color: #fff; padding: 6px 12px; border-radius: 14px; text-decoration: none; font-size: 12px; }
   </style>
 </head>
 <body>
 
-  <!-- Основное лого на странице (подгружается из App Store) -->
-  <img src="https://is1-ssl.mzstatic.com" alt="GoKartTelemetry Logo" class="app-icon">
-  
-  <h1>Go-Kart Telemetry</h1>
-  <div id="status-text">Ищем установленное приложение...</div>
-  <div class="loader" id="loader"></div>
+  <img src="https://is1-ssl.mzstatic.com" alt="Logo" class="app-icon">
 
-  <!-- Всплывающий баннер -->
-  <div id="gkt-app-banner" role="dialog">
+  <a href="https://gokarttelemetry.github.io" id="openBtn" class="btn btn-open">Open</a>
+  <a href="https://apps.apple.com" class="btn btn-store">App Store</a>
+
+  <div id="custom-banner">
     <img src="https://is1-ssl.mzstatic.com" alt="GKT">
-    <div class="gkt-info">
-      <div class="gkt-title">Go-Kart Telemetry</div>
-      <div class="gkt-sub">Телеметрия гонок на iOS</div>
-    </div>
-    <div class="gkt-actions">
-      <a href="https://apps.apple.com">Установить</a>
-    </div>
+    <div class="banner-text">Go-Kart Telemetry</div>
+    <a href="https://gokarttelemetry.github.io" class="banner-btn">OPEN</a>
   </div>
 
   <script>
     (function() {
-      var appStoreURL = 'https://apps.apple.com';
-      var universalLink = 'https://gokarttelemetry.github.io';
-      var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+      var ua = navigator.userAgent;
+      var isIOS = /iPhone|iPad|iPod/.test(ua);
+      var isMac = /Macintosh/.test(ua);
+      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Telegram/.test(ua);
 
-      function openAppOrStore() {
-        var start = Date.now();
+      if (isIOS || isMac) {
+        document.getElementById('openBtn').style.display = 'block';
         
-        // Попытка открыть приложение через Universal Link
-        window.location.href = universalLink;
-
-        // Если через 2 секунды фокус все еще на странице — идем в App Store
-        setTimeout(function() {
-          if (document.hasFocus() && (Date.now() - start < 2500)) {
-            document.getElementById('status-text').innerText = "Приложение не найдено. Переходим в App Store...";
-            window.location.href = appStoreURL;
-          }
-        }, 2000);
-      }
-
-      if (isIOS) {
-        setTimeout(openAppOrStore, 800);
-      } else {
-        document.getElementById('status-text').innerText = "Доступно в App Store для iPhone";
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('gkt-app-banner').style.display = 'flex';
+        // Если это НЕ Safari, показываем кастомный баннер снизу
+        if (!isSafari) {
+          document.getElementById('custom-banner').style.display = 'flex';
+        }
       }
     })();
   </script>
+
 </body>
 </html>
