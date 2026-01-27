@@ -5,7 +5,7 @@
         "appIDs": [ "954TXN9J73.GoKartTelemetry" ],
         "components": [
           {
-            "/": "/tracklink/*"
+            "/": "*"
           }
         ]
       }
