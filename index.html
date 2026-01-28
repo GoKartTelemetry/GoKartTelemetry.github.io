@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Go-Kart Telemetry</title>
-  <!-- Нативный баннер для Safari (iOS) -->
   <meta name="apple-itunes-app" content="app-id=6756797114">
 
   <style>
@@ -14,11 +13,12 @@
       height: 100vh; margin: 0; background: #f5f5f7; 
     }
     .app-icon { width: 120px; height: 120px; border-radius: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 40px; }
-    .btn { width: 220px; padding: 14px 0; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 16px; text-align: center; transition: transform 0.1s; }
-    .btn:active { transform: scale(0.97); }
-    .btn-store { background: #007aff; color: #fff; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+    
+    /* Стили для нового бейджа */
+    .store-badge { display: inline-block; transition: transform 0.1s; }
+    .store-badge:active { transform: scale(0.97); }
+    .store-badge img { height: 60px; width: auto; } /* Высота по гайдлайнам Apple */
 
-    /* Кастомный баннер для сторонних браузеров */
     #custom-banner { 
       position: fixed; bottom: 20px; left: 16px; right: 16px; 
       background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); 
@@ -33,14 +33,15 @@
 </head>
 <body>
 
-  <!-- После публикации приложения в App Store вызвать iTunes Lookup API: https://itunes.apple.com/lookup?id=6756797114
-  В ответе взять поле artworkUrl100 / artworkUrl60 и использовать как img src -->
+  <img src="https://is1-ssl.mzstatic.com" alt="Go-Kart Telemetry" class="app-icon">
   
-  <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c9/fc/cb/c9fccb59-1a22-877d-3516-f88c9381db14/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/100x100bb.jpg" alt="Go-Kart Telemetry" class="app-icon">
-  <a href="https://apps.apple.com/app/id6756797114" class="btn btn-store">App Store</a>
+  <!-- Кнопка с официальным бейджем Apple -->
+  <a href="https://apps.apple.com/app/id6756797114" class="store-badge">
+    <img src="https://tools.applemediaservices.com" alt="Download on the App Store">
+  </a>
 
   <div id="custom-banner">
-    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c9/fc/cb/c9fccb59-1a22-877d-3516-f88c9381db14/AppIcon-0-0-1x_U007epad-0-1-0-85-220.png/60x60bb.jpg" alt="Go-Kart Telemetry">
+    <img src="https://is1-ssl.mzstatic.com" alt="Go-Kart Telemetry">
     <div class="banner-text">Go-Kart Telemetry</div>
     <a href="https://apps.apple.com/app/id6756797114" class="banner-btn">VIEW</a>
   </div>
@@ -49,7 +50,7 @@
     (function() {
       var ua = navigator.userAgent;
       var isApple = /iPhone|iPad|iPod|Macintosh/.test(ua);
-      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Telegram|YaBrowser/.test(ua);
+      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Telegram/.test(ua);
 
       if (isApple && !isSafari) {
         document.getElementById('custom-banner').style.display = 'flex';
