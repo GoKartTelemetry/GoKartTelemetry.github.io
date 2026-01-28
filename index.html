@@ -4,55 +4,190 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Go-Kart Telemetry</title>
+
+  <!-- Native Apple Smart App Banner (iPhone Safari only) -->
   <meta name="apple-itunes-app" content="app-id=6756797114">
 
   <style>
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-      display: flex; flex-direction: column; align-items: center; justify-content: center; 
-      height: 100vh; margin: 0; background: #f5f5f7; 
+    * {
+      box-sizing: border-box;
     }
-    .app-icon { width: 120px; height: 120px; border-radius: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 40px; }
-    
-    /* Стили для нового бейджа */
-    .store-badge { display: inline-block; transition: transform 0.1s; }
-    .store-badge:active { transform: scale(0.97); }
-    .store-badge img { height: 60px; width: auto; } /* Высота по гайдлайнам Apple */
 
-    #custom-banner { 
-      position: fixed; bottom: 20px; left: 16px; right: 16px; 
-      background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); 
-      border-radius: 14px; padding: 12px; display: none; 
-      align-items: center; gap: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
-      border: 0.5px solid #d2d2d7; z-index: 1000;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding-top: 96px; /* space for top banner */
+      background: #f5f5f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    #custom-banner img { width: 40px; height: 40px; border-radius: 8px; }
-    .banner-text { flex: 1; font-size: 13px; font-weight: 600; color: #1d1d1f; }
-    .banner-btn { background: #007aff; color: #fff; padding: 6px 12px; border-radius: 14px; text-decoration: none; font-size: 12px; font-weight: 600; }
+
+    /* ===== Top Apple-style banner ===== */
+    #custom-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 88px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 0.5px solid rgba(0,0,0,0.12);
+      z-index: 1000;
+      animation: slideDown 0.25s ease-out;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Inner container for large screens (Mac) */
+    .banner-inner {
+      width: 100%;
+      max-width: 980px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    #custom-banner img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .banner-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .banner-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d1d1f;
+      line-height: 1.2;
+    }
+
+    .banner-subtitle {
+      font-size: 12px;
+      font-weight: 400;
+      color: #6e6e73;
+    }
+
+    .banner-btn {
+      background: #007aff;
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Hover only on non-touch devices (Mac) */
+    @media (hover: hover) and (pointer: fine) {
+      #custom-banner:hover {
+        background: rgba(255,255,255,0.99);
+      }
+    }
+
+    /* Tap feedback */
+    #custom-banner:active {
+      transform: scale(0.995);
+    }
+
+    /* ===== Main content ===== */
+    .app-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 26px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      object-fit: cover;
+    }
+
+    .store-badge {
+      display: inline-block;
+      transition: transform 0.1s;
+    }
+
+    .store-badge:active {
+      transform: scale(0.97);
+    }
+
+    .store-badge img {
+      height: 60px;
+      width: auto;
+    }
   </style>
 </head>
 <body>
 
-  <img src="https://is1-ssl.mzstatic.com" alt="Go-Kart Telemetry" class="app-icon">
-  
-  <!-- Кнопка с официальным бейджем Apple -->
-  <a href="https://apps.apple.com/app/id6756797114" class="store-badge">
-    <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on the App Store">
+  <!-- Top clickable banner -->
+  <a
+    href="https://apps.apple.com/app/id6756797114"
+    id="custom-banner"
+    aria-label="Open Go-Kart Telemetry on the App Store"
+  >
+    <div class="banner-inner">
+      <img
+        src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/xx/xx/xx/xxxxxxxx-xxxxxxxx.png/512x512bb.png"
+        alt="Go-Kart Telemetry"
+      >
+      <div class="banner-text">
+        <div class="banner-title">Go-Kart Telemetry</div>
+        <div class="banner-subtitle">Free · App Store</div>
+      </div>
+      <div class="banner-btn">VIEW</div>
+    </div>
   </a>
 
-  <div id="custom-banner">
-    <img src="https://is1-ssl.mzstatic.com" alt="Go-Kart Telemetry">
-    <div class="banner-text">Go-Kart Telemetry</div>
-    <a href="https://apps.apple.com/app/id6756797114" class="banner-btn">VIEW</a>
-  </div>
+  <!-- Main content -->
+  <a href="https://apps.apple.com/app/id6756797114">
+    <img
+      src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/xx/xx/xx/xxxxxxxx-xxxxxxxx.png/512x512bb.png"
+      alt="Go-Kart Telemetry"
+      class="app-icon"
+    >
+  </a>
+
+  <a href="https://apps.apple.com/app/id6756797114" class="store-badge">
+    <img
+      src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83"
+      alt="Download on the App Store"
+    >
+  </a>
 
   <script>
-    (function() {
+    (function () {
       var ua = navigator.userAgent;
-      var isApple = /iPhone|iPad|iPod|Macintosh/.test(ua);
-      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome|Telegram/.test(ua);
 
-      if (isApple && !isSafari) {
+      var isIPhone = /iPhone|iPod/.test(ua);
+      var isIPad =
+        /iPad/.test(ua) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var isMac = /Macintosh/.test(ua) && !isIPad;
+      var isSafari = /^((?!chrome|android|crios|fxios|edgios|opios).)*safari/i.test(ua);
+
+      // iPhone Safari → native Smart App Banner
+      if (isIPhone && isSafari) return;
+
+      // iPad / Mac / other browsers → custom top banner
+      if (isIPad || isMac || !isSafari) {
         document.getElementById('custom-banner').style.display = 'flex';
       }
     })();
