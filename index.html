@@ -16,7 +16,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
-      padding-top: 96px; /* space for top banner */
+      padding-top: 96px;
       background: #f5f5f7;
       min-height: 100vh;
       display: flex;
@@ -25,7 +25,7 @@
       justify-content: center;
     }
 
-    /* ===== Top Apple-style banner ===== */
+    /* ===== Top banner ===== */
     #custom-banner {
       position: fixed;
       top: 0;
@@ -50,7 +50,6 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* Inner container for large screens (Mac) */
     .banner-inner {
       width: 100%;
       max-width: 980px;
@@ -79,12 +78,10 @@
       font-size: 13px;
       font-weight: 600;
       color: #1d1d1f;
-      line-height: 1.2;
     }
 
     .banner-subtitle {
       font-size: 12px;
-      font-weight: 400;
       color: #6e6e73;
     }
 
@@ -98,14 +95,12 @@
       white-space: nowrap;
     }
 
-    /* Hover only on non-touch devices (Mac) */
     @media (hover: hover) and (pointer: fine) {
       #custom-banner:hover {
         background: rgba(255,255,255,0.99);
       }
     }
 
-    /* Tap feedback */
     #custom-banner:active {
       transform: scale(0.995);
     }
@@ -120,28 +115,18 @@
       object-fit: cover;
     }
 
-    .store-badge {
-      display: inline-block;
-      transition: transform 0.1s;
-    }
-
-    .store-badge:active {
-      transform: scale(0.97);
-    }
-
     .store-badge img {
       height: 60px;
-      width: auto;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top clickable banner -->
+  <!-- Top banner -->
   <a
     href="https://apps.apple.com/app/id6756797114"
     id="custom-banner"
-    aria-label="Open Go-Kart Telemetry on the App Store"
+    aria-label="Open Go-Kart Telemetry"
   >
     <div class="banner-inner">
       <img
@@ -152,18 +137,16 @@
         <div class="banner-title">Go-Kart Telemetry</div>
         <div class="banner-subtitle">Free · App Store</div>
       </div>
-      <div class="banner-btn">VIEW</div>
+      <div class="banner-btn" id="banner-btn">VIEW</div>
     </div>
   </a>
 
   <!-- Main content -->
-  <a href="https://apps.apple.com/app/id6756797114">
-    <img
-      src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/xx/xx/xx/xxxxxxxx-xxxxxxxx.png/512x512bb.png"
-      alt="Go-Kart Telemetry"
-      class="app-icon"
-    >
-  </a>
+  <img
+    src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/xx/xx/xx/xxxxxxxx-xxxxxxxx.png/512x512bb.png"
+    alt="Go-Kart Telemetry"
+    class="app-icon"
+  >
 
   <a href="https://apps.apple.com/app/id6756797114" class="store-badge">
     <img
@@ -182,14 +165,41 @@
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       var isMac = /Macintosh/.test(ua) && !isIPad;
       var isSafari = /^((?!chrome|android|crios|fxios|edgios|opios).)*safari/i.test(ua);
+      var isChrome = /Chrome/.test(ua) && !/Edg|OPR/.test(ua);
+
+      var banner = document.getElementById('custom-banner');
+      var bannerBtn = document.getElementById('banner-btn');
+
+      var scheme = 'gokarttelemetry://open';
+      var appStore = 'https://apps.apple.com/app/id6756797114';
 
       // iPhone Safari → native Smart App Banner
       if (isIPhone && isSafari) return;
 
-      // iPad / Mac / other browsers → custom top banner
-      if (isIPad || isMac || !isSafari) {
-        document.getElementById('custom-banner').style.display = 'flex';
+      // Show custom banner
+      banner.style.display = 'flex';
+
+      // ===== macOS =====
+      if (isMac) {
+        bannerBtn.textContent = 'OPEN';
+
+        banner.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          // Try to open the app
+          window.location.href = scheme;
+
+          // Fallback to App Store
+          setTimeout(function () {
+            window.location.href = appStore;
+          }, isSafari ? 1200 : 1600);
+        });
+
+        return;
       }
+
+      // ===== iPad / other browsers =====
+      banner.href = appStore;
     })();
   </script>
 
