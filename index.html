@@ -196,5 +196,37 @@
     })();
   </script>
 
+
+<!-- Кнопка, которая появится, если Universal Link не сработал автоматически DELETE если не сработает-->
+<div id="open-app-container" style="display:none; text-align:center; margin-top:20px;">
+    <a id="deep-link-btn" href="#" class="banner-btn" style="padding: 15px 30px; font-size: 18px;">
+        ОТКРЫТЬ В ПРИЛОЖЕНИИ
+    </a>
+</div>
+
+<script>
+    (function () {
+        // Достаем ID из текущего URL (например, .../tracklink/ID)
+        var pathParts = window.location.pathname.split('/');
+        var recordID = pathParts[pathParts.length - 1];
+
+        if (recordID && recordID !== 'tracklink') {
+            var deepLink = "gokart://tracklink/" + recordID;
+            
+            // 1. Настраиваем кнопку для ручного перехода
+            var btn = document.getElementById('deep-link-btn');
+            btn.href = deepLink;
+            document.getElementById('open-app-container').style.display = 'block';
+
+            // 2. Попытка автоматического редиректа (работает не всегда, но стоит попробовать)
+            // Safari часто блокирует это без участия пользователя, поэтому кнопка выше — база.
+            setTimeout(function() {
+                window.location = deepLink;
+            }, 500);
+        }
+    })();
+</script>
+  
+  
 </body>
 </html>
